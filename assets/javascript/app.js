@@ -1,29 +1,40 @@
 var rightAnswers = 0;
 var wrongAnswers = 0;
+var timer;
+var timePerQuestion = 10;
+var timerRunning = false;
 
-function goodbye() {
-    console.log("end");
+function countDown() {
+    timer = setInterval(decrement, 1000);
 }
 
-console.log("start");
+function decrement() {
+    timerRunning = true;
+    timePerQuestion--;
 
-setTimeout(goodbye, 3000);
+    $("#timer").html("<h2>" + timePerQuestion + "</h2>");
 
-function countdown() {
-    seconds = 5;
-    console.log(seconds);
-    seconds--;
+    if (timePerQuestion === 0) {
+
+        stop();
+        $("#time").html("<h2>" + timePerQuestion + "</h2>");
+
+    }
 }
 
-var timer = setInterval(countdown, 1000);
+function stop() {
+    clearInterval(timer);
+}
+
+
 
 
 $(document).ready(function() {
 
-    timer;
+    $("#timer").html("<h2>" + timePerQuestion + "</h2>");
+    countDown();
 
     $("#pause").on("click", function() {
-        clearInterval(timer);
+        stop();
     });
-
 });
