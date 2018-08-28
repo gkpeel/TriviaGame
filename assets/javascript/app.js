@@ -37,16 +37,21 @@ function random(int) {
 
 // Pulls object out of gameRounds arrays at random
 function selectQuesiton() {
-    currentRound = gameRounds.splice(random(gameRounds.length), 1)[0];
-    return currentRound;
+    if (gameRounds.length !== 0) {
+        currentRound = gameRounds.splice(random(gameRounds.length), 1)[0];
+        usedQuestions.push(currentRound);
+        console.log(usedQuestions);
+        return currentRound;
+    } else {
+        return false;
+    }
 }
-
 
 // Creates output of the question and choices
 function displayQuesiton() {
     var retval = "<h3>";
     var currentQ = selectQuesiton();
-    if (currentQ === undefined) {
+    if (currentQ === false) {
         return endGameDisplay();
     } else {
         retval += currentQ.question;
@@ -91,16 +96,26 @@ function endGameDisplay() {
     retval += '<h4>Correct Answers: ' + rightAnswers + '</h4>';
     retval += '<h4>Incorrect Answers: ' + wrongAnswers + '</h4>';
     retval += '<h4>Unanswered: ' + unanswered + '</h4>';
-    retval += '<button class="btn">Start Over?</button>';
-    $(".timer").empty();
+    retval += '<button class="btn" id="reset">Start Over?</button>';
     return retval;
+}
+
+function gameReset() {
+    gameRounds = usedQuestions;
+    usedQuestions = [];
+    gameOver = false;
+    rightAnswers = 0;
+    wrongAnswers = 0;
+    unanswered = 0;
+    console.log(usedQuestions);
 }
 
 
 // Timer functions
 function countDown() {
-    timerRunning = true;
-    timer = setInterval(decrement, 1000);
+    if (!gameOver) {
+        timer = setInterval(decrement, 1000);
+    }
 }
 
 function decrement() {
@@ -133,8 +148,6 @@ $("#timer").html(timePerQuestion);
 
 
 
-
-
 // ====== EVENT LISTENERS ======
 $(document).ready(function() {
 
@@ -163,9 +176,18 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on("click", "#game-content #reset", function() {
+        gameReset();
+        $("#game-content").html(displayQuesiton());
+        $("#timer").html(timePerQuestion);
+        countDown();
+    });
+
     $("#pause").on("click", function() {
         stop();
     });
+
+
 });
 
 
