@@ -1,10 +1,11 @@
+// ====== VARIABLES ======
 var rightAnswers = 0;
 var wrongAnswers = 0;
+var unanswered = 0;
 var timer;
 var timePerQuestion = 10;
-var timerRunning = false;
+var gameOver = false;
 var currentRound;
-
 var gameRounds = [
     {
         question: "What year was the Declaration of Inpendence signed?",
@@ -25,33 +26,43 @@ var gameRounds = [
         answerImage: "hamilton.jpeg"
     },
 ]
+var usedQuestions = [];
 
+
+// ====== FUNCTIONS ======
 // Creates random number
 function random(int) {
     return Math.floor(Math.random()*int);
 }
 
-// Pulls random object out of gameRounds arrays
+// Pulls object out of gameRounds arrays at random
 function selectQuesiton() {
     currentRound = gameRounds.splice(random(gameRounds.length), 1)[0];
     return currentRound;
 }
 
+
 // Creates output of the question and choices
 function displayQuesiton() {
     var retval = "<h3>";
     var currentQ = selectQuesiton();
-    retval += currentQ.question;
-    retval += '</h3><div class="row" id="answers">'
-    for (var i=0; i<currentQ.choices.length; i++) {
-        retval += '<div class="col-6 guess guess-'+i+'">' + currentQ.choices[i] + '</div><div class="w-100"></div>';
+    if (currentQ === undefined) {
+        return endGameDisplay();
+    } else {
+        retval += currentQ.question;
+        retval += '</h3><div class="row" id="answers">'
+        for (var i=0; i<currentQ.choices.length; i++) {
+            retval += '<div class="col-6 guess guess-'+i+'">' + currentQ.choices[i] + '</div><div class="w-100"></div>';
+        }
+        return retval;
     }
-    return retval;
 }
 
+
+// Game Evaluation functions
 function rightAnswer() {
     rightAnswers++;
-    retval = "<h3>Right On!</h3>";
+    var retval = "<h3>Right On!</h3>";
     retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
     retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
     return retval;
@@ -59,9 +70,29 @@ function rightAnswer() {
 
 function wrongAnswer() {
     wrongAnswers++;
-    retval = "<h3>Nope!</h3>";
+    var retval = "<h3>Nope!</h3>";
     retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
     retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
+    return retval;
+}
+
+function outOfTime() {
+    unanswered++;
+    var retval = "<h3>You have to be quicker!</h3>";
+    retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
+    retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
+    return retval;
+}
+
+function endGameDisplay() {
+    gameOver = true;
+    stop();
+    var retval = "<h3>All done, here's how you did!</h3>";
+    retval += '<h4>Correct Answers: ' + rightAnswers + '</h4>';
+    retval += '<h4>Incorrect Answers: ' + wrongAnswers + '</h4>';
+    retval += '<h4>Unanswered: ' + unanswered + '</h4>';
+    retval += '<button class="btn">Start Over?</button>';
+    $(".timer").empty();
     return retval;
 }
 
@@ -78,9 +109,13 @@ function decrement() {
 
     $("#timer").html(timePerQuestion);
     if (timePerQuestion === 0) {
-        stop();
         $("#timer").html(timePerQuestion);
-        $("#game-content").html(wrongAnswer());
+        reset();
+        $("#game-content").html(outOfTime());
+        setTimeout(function() {
+            $("#game-content").html(displayQuesiton());
+            countDown();
+        }, 3000);
     }
 }
 
@@ -96,6 +131,11 @@ function reset() {
 
 $("#timer").html(timePerQuestion);
 
+
+
+
+
+// ====== EVENT LISTENERS ======
 $(document).ready(function() {
 
     $("#start").on("click", function() {
@@ -106,18 +146,20 @@ $(document).ready(function() {
     $(document).on("click", "#game-content .guess", function() {
         var index = $(this).index();
         reset();
-        if(index/2===currentRound.answer) {
-            $("#game-content").html(rightAnswer());
-            setTimeout(function() {
-                $("#game-content").html(displayQuesiton());
-                countDown();
-            }, 3000);
-        } else {
-            $("#game-content").html(wrongAnswer());
-            setTimeout(function() {
-                $("#game-content").html(displayQuesiton());
-                countDown();
-            }, 3000);
+        if (!gameOver) {
+            if(index/2===currentRound.answer) {
+                $("#game-content").html(rightAnswer());
+                setTimeout(function() {
+                    $("#game-content").html(displayQuesiton());
+                    countDown();
+                }, 3000);
+            } else {
+                $("#game-content").html(wrongAnswer());
+                setTimeout(function() {
+                    $("#game-content").html(displayQuesiton());
+                    countDown();
+                }, 3000);
+            }
         }
     });
 
@@ -127,47 +169,42 @@ $(document).ready(function() {
 });
 
 
-
-
-
 // TODO: 
 // check guess against answer, 
 // display if answer 
 // right or wrong, 
 // load next question
 
-
-
-    // var triviaGame = {
-    //     gameLibrary: [
-    //         {
-    //             question: "What year was the Declaration of Inpendence signed?",
-    //             choices: ["2001", "1776", "1777", "1781"],
-    //             answer: "1776"
-    //         },
-    //         {
-    //             question: "Who was the first President of the United States?",
-    //             choices: ["Thomas Jefferson", "Alexander Hamilton", "James Madison", "George Washington"],
-    //             answer: "George Washington"
-    //         },
-    //         {
-    //             question: "Where was Alexander Hamilton born?",
-    //             choices: ["Trinidad and Tobago", "St. Kitts", "Trenton", "Philadelphia"],
-    //             answer: "St. Kitts"
-    //         }
-    //     ],
-    //     generateQuestion: function () {
-    //         return this.gameLibrary.pop(random(gameRounds.length));
-    //     },
-    //     displayQuesiton: function() {
-    //         var retval = "<h3>";
-    //         var currentQ = this.generateQuestion;
-    //         console.log(currentQ);
-    //         retval += currentQ.question;
-    //         retval += '</h3><div class="row">'
-    //         for (var i=0; i<currentQ.choices.length; i++) {
-    //             retval += '<div class="col-6 guess guess-'+i+'">' + currentQ.choices[i] + '</div><div class="w-100"></div>';
-    //         }
-    //         return retval;
-    //     }
-    // }
+// var triviaGame = {
+//     gameLibrary: [
+//         {
+//             question: "What year was the Declaration of Inpendence signed?",
+//             choices: ["2001", "1776", "1777", "1781"],
+//             answer: "1776"
+//         },
+//         {
+//             question: "Who was the first President of the United States?",
+//             choices: ["Thomas Jefferson", "Alexander Hamilton", "James Madison", "George Washington"],
+//             answer: "George Washington"
+//         },
+//         {
+//             question: "Where was Alexander Hamilton born?",
+//             choices: ["Trinidad and Tobago", "St. Kitts", "Trenton", "Philadelphia"],
+//             answer: "St. Kitts"
+//         }
+//     ],
+//     generateQuestion: function () {
+//         return this.gameLibrary.pop(random(gameRounds.length));
+//     },
+//     displayQuesiton: function() {
+//         var retval = "<h3>";
+//         var currentQ = this.generateQuestion;
+//         console.log(currentQ);
+//         retval += currentQ.question;
+//         retval += '</h3><div class="row">'
+//         for (var i=0; i<currentQ.choices.length; i++) {
+//             retval += '<div class="col-6 guess guess-'+i+'">' + currentQ.choices[i] + '</div><div class="w-100"></div>';
+//         }
+//         return retval;
+//     }
+// }
