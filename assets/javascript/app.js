@@ -1,32 +1,137 @@
 // ====== VARIABLES ======
-var rightAnswers = 0;
-var wrongAnswers = 0;
-var unanswered = 0;
 var timer;
-var timePerQuestion = 10;
-var gameOver = false;
 var currentRound;
-var gameRounds = [
-    {
-        question: "What year was the Declaration of Inpendence signed?",
-        choices: ["2001", "1776", "1777", "1781"],
-        answer: 1,
-        answerImage: "hamilton.jpeg"
+
+
+// ====== OBJECTS ======
+
+var triviaGame = {
+    gameOver: false,
+    rightAnswer: 0,
+    wrongAnswers: 0,
+    unanswered: 0,
+    currentRound: undefined,
+    gameRounds: [
+        {
+            question: "What year was the Declaration of Inpendence signed?",
+            choices: ["2001", "1776", "1777", "1781"],
+            answer: 1,
+            answerImage: "hamilton.jpeg"
+        },
+        {
+            question: "Who was the first President of the United States?",
+            choices: ["Thomas Jefferson", "Alexander Hamilton", "James Madison", "George Washington"],
+            answer: 3,
+            answerImage: "hamilton.jpeg"
+        },
+        {
+            question: "Where was Alexander Hamilton born?",
+            choices: ["Trinidad and Tobago", "St. Kitts", "Trenton", "Philadelphia"],
+            answer: 1,
+            answerImage: "hamilton.jpeg"
+        },
+    ],
+    usedQuestions: [],
+    // Pulls object out of gameRounds arrays at random
+    selectQuesiton: function() {
+        if (triviaGame.gameRounds.length !== 0) {
+            this.currentRound = triviaGame.gameRounds.splice(random(triviaGame.gameRounds.length), 1)[0];
+            triviaGame.usedQuestions.push(triviaGame.currentRound);
+            console.log(triviaGame.currentRound);
+            console.log(this.usedQuestions);
+        } else {
+            this.currentRound = false;
+        }
     },
-    {
-        question: "Who was the first President of the United States?",
-        choices: ["Thomas Jefferson", "Alexander Hamilton", "James Madison", "George Washington"],
-        answer: 3,
-        answerImage: "hamilton.jpeg"
+    // Creates output of the question and choices
+    displayQuesiton: function() {
+        var retval = "<h3>";
+        this.selectQuesiton;
+        console.log(currentRound);
+        if (this.currentRound === false) {
+            return this.endGameDisplay();
+        } else {
+            retval += triviaGame.currentRound.question;
+            retval += '</h3><div class="row" id="answers">'
+            for (var i=0; i<currentQ.choices.length; i++) {
+                retval += '<div class="col-6 guess guess-'+i+'">' + currentQ.choices[i] + '</div><div class="w-100"></div>';
+            }
+            return retval;
+        }
     },
-    {
-        question: "Where was Alexander Hamilton born?",
-        choices: ["Trinidad and Tobago", "St. Kitts", "Trenton", "Philadelphia"],
-        answer: 1,
-        answerImage: "hamilton.jpeg"
+    // Game Evaluation functions
+    rightAnswer: function() {
+        rightAnswers++;
+        var retval = "<h3>Right On!</h3>";
+        retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
+        retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
+        return retval;
     },
-]
-var usedQuestions = [];
+    wrongAnswer: function() {
+        wrongAnswers++;
+        var retval = "<h3>Nope!</h3>";
+        retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
+        retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
+        return retval;
+    },
+    outOfTime: function() {
+        unanswered++;
+        var retval = "<h3>You have to be quicker!</h3>";
+        retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
+        retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
+        return retval;
+    },
+    endGameDisplay: function() {
+        gameOver = true;
+        stop();
+        var retval = "<h3>All done, here's how you did!</h3>";
+        retval += '<h4>Correct Answers: ' + rightAnswers + '</h4>';
+        retval += '<h4>Incorrect Answers: ' + wrongAnswers + '</h4>';
+        retval += '<h4>Unanswered: ' + unanswered + '</h4>';
+        retval += '<button class="btn" id="reset">Start Over?</button>';
+        return retval;
+    },
+    gameReset: function() {
+        gameRounds = usedQuestions;
+        usedQuestions = [];
+        gameOver = false;
+        rightAnswers = 0;
+        wrongAnswers = 0;
+        unanswered = 0;
+        console.log(usedQuestions);
+    }
+}
+
+var clock = {
+    timePerQuestion: 10,
+    countDown: function() {
+        if (!gameOver) {
+            timer = setInterval(decrement, 1000);
+        }
+    },
+    decrement: function() {
+        timePerQuestion--;
+    
+        $("#timer").html(timePerQuestion);
+        if (timePerQuestion === 0) {
+            $("#timer").html(timePerQuestion);
+            reset();
+            $("#game-content").html(outOfTime());
+            setTimeout(function() {
+                $("#game-content").html(displayQuesiton());
+                countDown();
+            }, 3000);
+        }
+    },
+    stop: function() {
+        clearInterval(timer);
+    },
+    reset: function() {
+        stop();
+        timePerQuestion = 10;
+        $("#timer").html(timePerQuestion);
+    }
+}
 
 
 // ====== FUNCTIONS ======
@@ -35,124 +140,15 @@ function random(int) {
     return Math.floor(Math.random()*int);
 }
 
-// Pulls object out of gameRounds arrays at random
-function selectQuesiton() {
-    if (gameRounds.length !== 0) {
-        currentRound = gameRounds.splice(random(gameRounds.length), 1)[0];
-        usedQuestions.push(currentRound);
-        console.log(usedQuestions);
-        return currentRound;
-    } else {
-        return false;
-    }
-}
 
-// Creates output of the question and choices
-function displayQuesiton() {
-    var retval = "<h3>";
-    var currentQ = selectQuesiton();
-    if (currentQ === false) {
-        return endGameDisplay();
-    } else {
-        retval += currentQ.question;
-        retval += '</h3><div class="row" id="answers">'
-        for (var i=0; i<currentQ.choices.length; i++) {
-            retval += '<div class="col-6 guess guess-'+i+'">' + currentQ.choices[i] + '</div><div class="w-100"></div>';
-        }
-        return retval;
-    }
-}
+$("#timer").html(clock.timePerQuestion);
 
-
-// Game Evaluation functions
-function rightAnswer() {
-    rightAnswers++;
-    var retval = "<h3>Right On!</h3>";
-    retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
-    retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
-    return retval;
-}
-
-function wrongAnswer() {
-    wrongAnswers++;
-    var retval = "<h3>Nope!</h3>";
-    retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
-    retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
-    return retval;
-}
-
-function outOfTime() {
-    unanswered++;
-    var retval = "<h3>You have to be quicker!</h3>";
-    retval += "<p>The correct answer was " + currentRound.choices[currentRound.answer] + "</p>";
-    retval += '<img class="answer-image" src="assets/images/' + currentRound.answerImage + '" />';
-    return retval;
-}
-
-function endGameDisplay() {
-    gameOver = true;
-    stop();
-    var retval = "<h3>All done, here's how you did!</h3>";
-    retval += '<h4>Correct Answers: ' + rightAnswers + '</h4>';
-    retval += '<h4>Incorrect Answers: ' + wrongAnswers + '</h4>';
-    retval += '<h4>Unanswered: ' + unanswered + '</h4>';
-    retval += '<button class="btn" id="reset">Start Over?</button>';
-    return retval;
-}
-
-function gameReset() {
-    gameRounds = usedQuestions;
-    usedQuestions = [];
-    gameOver = false;
-    rightAnswers = 0;
-    wrongAnswers = 0;
-    unanswered = 0;
-    console.log(usedQuestions);
-}
-
-
-// Timer functions
-function countDown() {
-    if (!gameOver) {
-        timer = setInterval(decrement, 1000);
-    }
-}
-
-function decrement() {
-    timePerQuestion;
-    timePerQuestion--;
-
-    $("#timer").html(timePerQuestion);
-    if (timePerQuestion === 0) {
-        $("#timer").html(timePerQuestion);
-        reset();
-        $("#game-content").html(outOfTime());
-        setTimeout(function() {
-            $("#game-content").html(displayQuesiton());
-            countDown();
-        }, 3000);
-    }
-}
-
-function stop() {
-    clearInterval(timer);
-}
-
-function reset() {
-    stop();
-    timePerQuestion = 10;
-    $("#timer").html(timePerQuestion);
-}
-
-$("#timer").html(timePerQuestion);
-
-
-
+console.log(triviaGame.gameRounds);
 // ====== EVENT LISTENERS ======
 $(document).ready(function() {
 
     $("#start").on("click", function() {
-        $("#game-content").html(displayQuesiton());
+        $("#game-content").html(triviaGame.displayQuesiton);
         countDown();
     });
 
