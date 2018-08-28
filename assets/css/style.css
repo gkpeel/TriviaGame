@@ -1,0 +1,7 @@
+.guess {
+    padding: 1em 2em;
+    border: 2px solid slateblue;
+    margin: 12px auto;
+    text-align: center;
+    cursor: pointer;
+}
