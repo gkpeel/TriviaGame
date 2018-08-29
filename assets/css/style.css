@@ -1,7 +1,19 @@
+/* #game-content {
+    transition: all 0.3s ease-in-out;
+} */
+
 .guess {
     padding: 1em 2em;
     border: 2px solid slateblue;
     margin: 12px auto;
     text-align: center;
     cursor: pointer;
+}
+
+.blur {
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
 }
