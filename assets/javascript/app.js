@@ -4,6 +4,7 @@ var gameOver = false;
 // ====== OBJECTS ======
 
 var triviaGame = {
+
     rightAnswers: 0,
     wrongAnswers: 0,
     unanswered: 0,
@@ -96,9 +97,11 @@ var triviaGame = {
 
     ],
     usedQuestions: [],
+
     // Creates output of the question and choices
     displayQuesiton: function() {
         $("#pause").toggleClass("d-none");
+        $("#progress").toggleClass("d-none");
         var retval = "<h3>";
         if (this.usedQuestions.length === 10) {
             return this.endGameDisplay();
@@ -110,36 +113,35 @@ var triviaGame = {
             for (var i=0; i<this.currentRound.choices.length; i++) {
                 retval += '<div class="col-6 guess guess-'+i+'">' + this.currentRound.choices[i] + '</div><div class="w-100"></div>';
             }
+            $("#progress").html("Question " + this.usedQuestions.length + " of 10");
             return retval;
         }
     },
+
     // Game Evaluation functions
-    rightAnswer: function() {
+    evaluate: function(outcome) {
+        var retval = "";
         $("#pause").toggleClass("d-none");
-        this.rightAnswers++;
-        var retval = "<h3>Right On!</h3>";
+        $("#progress").toggleClass("d-none");
+        if (outcome === "correct") {
+            this.rightAnswers++;
+            retval += "<h3>Right On!</h3>";
+        }
+        if (outcome === "incorrect") {
+            this.wrongAnswers++;
+            retval += "<h3>Nope!</h3>";
+        }
+        if (outcome === "unanswered") {
+            this.unanswered++;
+            retval += "<h3>You have to be quicker!</h3>";
+        }
         retval += "<p>The correct answer was " + this.currentRound.choices[this.currentRound.answer] + "</p>";
-        retval += '<img class="answer-image" src="assets/images/' + this.currentRound.answerImage + '" />';
         return retval;
     },
-    wrongAnswer: function() {
-        $("#pause").toggleClass("d-none");
-        this.wrongAnswers++;
-        var retval = "<h3>Nope!</h3>";
-        retval += "<p>The correct answer was " + this.currentRound.choices[this.currentRound.answer] + "</p>";
-        retval += '<img class="answer-image" src="assets/images/' + this.currentRound.answerImage + '" />';
-        return retval;
-    },
-    outOfTime: function() {
-        $("#pause").toggleClass("d-none");
-        this.unanswered++;
-        var retval = "<h3>You have to be quicker!</h3>";
-        retval += "<p>The correct answer was " + this.currentRound.choices[this.currentRound.answer] + "</p>";
-        retval += '<img class="answer-image" src="assets/images/' + this.currentRound.answerImage + '" />';
-        return retval;
-    },
+
     endGameDisplay: function() {
         $("#pause").toggleClass("d-none");
+        $("#progress").toggleClass("d-none");
         gameOver = true;
         clock.stop();
         var retval = "<h3>All done, here's how you did!</h3>";
@@ -149,6 +151,7 @@ var triviaGame = {
         retval += '<button class="btn" id="reset">Start Over?</button>';
         return retval;
     },
+
     gameReset: function() {
         this.gameRounds = this.usedQuestions;
         this.usedQuestions = [];
@@ -160,7 +163,6 @@ var triviaGame = {
 }
 
 var clock = {
-    // timer: undefined,
     timePerQuestion: 10,
     clockRunning: false,
     countDown: function() {
@@ -175,7 +177,7 @@ var clock = {
         if (this.timePerQuestion === 0) {
             $("#timer").html(this.timePerQuestion);
             this.reset();
-            $("#game-content").html(triviaGame.outOfTime());
+            $("#game-content").html(triviaGame.evaluate("unanswered"));
             setTimeout(function() {
                 $("#game-content").html(triviaGame.displayQuesiton());
                 clock.countDown();
@@ -220,21 +222,18 @@ $(document).ready(function() {
         clock.reset();
         if (!gameOver) {
             if(index/2===triviaGame.currentRound.answer) {
-                $("#game-content").html(triviaGame.rightAnswer());
+                $("#game-content").html(triviaGame.evaluate("correct"));
                 setTimeout(function() {
                     $("#game-content").html(triviaGame.displayQuesiton());
                     clock.countDown();
                 }, 3000);
             } else {
-                $("#game-content").html(triviaGame.wrongAnswer());
+                $("#game-content").html(triviaGame.evaluate("incorrect"));
                 setTimeout(function() {
                     $("#game-content").html(triviaGame.displayQuesiton());
                     clock.countDown();
                 }, 3000);
             }
-            console.log("rightAnswers: " + triviaGame.rightAnswers);
-            console.log("wrongAnswers: " + triviaGame.wrongAnswers);
-            console.log("unanswered: " + triviaGame.unanswered);
         }
     });
 
@@ -263,5 +262,4 @@ $(document).ready(function() {
             $(this).text("Pause");
         }
     });
-
 });
