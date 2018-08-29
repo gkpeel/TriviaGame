@@ -10,27 +10,27 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-
     <title>Trivia Game</title>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container main-body">
         <div class="row">
             <div class="col-12">
-                <h1>Trivia Game</h1>
-                <div class="timer">
+                <img src="assets/images/marvel-logo.png" class="mx-auto d-block marvel-logo" />
+                <h1 class="text-center">Trivia Game</h1>
+                <div class="timer text-center">
                     <h2>Time Remaining: <span id="timer"></span> seconds</h2>
                 </div>
             </div>
             <div class="col-12">
                 <div id="game-content">
-                    <button id="start" class="btn btn-secondary">Start</button>
                 </div>
             </div>
-            <div class="col-12">
-                <div id="progress" class="d-none"></div>
-                <button id="pause" class="btn btn-primary d-none">Pause</button>
+            <div class="col-12 controls">
+                <div id="progress" class="d-none mb-3"></div>
+                <button id="start" class="btn btn-lg">Start</button>
+                <button id="pause" class="btn btn-lg d-none">Pause</button>
             </div>
         </div>
     </div>

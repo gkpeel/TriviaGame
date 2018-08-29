@@ -1,8 +1,12 @@
 // ====== VARIABLES ======
 var gameOver = false;
 
-// ====== OBJECTS ======
+// ====== FUNCTIONS ======
+function random(int) {
+    return Math.floor(Math.random()*int);
+}
 
+// ====== OBJECTS ======
 var triviaGame = {
 
     rightAnswers: 0,
@@ -102,7 +106,7 @@ var triviaGame = {
     displayQuesiton: function() {
         $("#pause").toggleClass("d-none");
         $("#progress").toggleClass("d-none");
-        var retval = "<h3>";
+        var retval = '<h3 class="text-center">';
         if (this.usedQuestions.length === 10) {
             return this.endGameDisplay();
         } else {
@@ -111,7 +115,7 @@ var triviaGame = {
             retval += this.currentRound.question;
             retval += '</h3><div class="row" id="answers">'
             for (var i=0; i<this.currentRound.choices.length; i++) {
-                retval += '<div class="col-6 guess guess-'+i+'">' + this.currentRound.choices[i] + '</div><div class="w-100"></div>';
+                retval += '<div class="col-6"><div class="guess">' + this.currentRound.choices[i] + '</div></div>';
             }
             $("#progress").html("Question " + this.usedQuestions.length + " of 10");
             return retval;
@@ -199,20 +203,14 @@ var clock = {
     }
 }
 
-
-// ====== FUNCTIONS ======
-// Creates random number
-function random(int) {
-    return Math.floor(Math.random()*int);
-}
-
-
 $("#timer").html(clock.timePerQuestion);
+
 
 // ====== EVENT LISTENERS ======
 $(document).ready(function() {
 
     $("#start").on("click", function() {
+        $(this).addClass("d-none");
         $("#game-content").html(triviaGame.displayQuesiton());
         clock.countDown();
     });
@@ -221,7 +219,7 @@ $(document).ready(function() {
         var index = $(this).index();
         clock.reset();
         if (!gameOver) {
-            if(index/2===triviaGame.currentRound.answer) {
+            if(index === triviaGame.currentRound.answer) {
                 $("#game-content").html(triviaGame.evaluate("correct"));
                 setTimeout(function() {
                     $("#game-content").html(triviaGame.displayQuesiton());
@@ -246,12 +244,6 @@ $(document).ready(function() {
         console.log(clock);
     });
 
-    // $("#pause").toggle(function() {
-    //     clock.stop();
-    // }, function() {
-    //     clock.resume();
-    // });
-
     $("#pause").on("click", function() {
         $("#game-content").toggleClass("blur", 200);
         if (clock.clockRunning === true) {
@@ -262,4 +254,5 @@ $(document).ready(function() {
             $(this).text("Pause");
         }
     });
+
 });
