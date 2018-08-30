@@ -115,10 +115,29 @@ var triviaGame = {
             retval += this.currentRound.question;
             retval += '</h3><div class="row" id="answers">'
             for (var i=0; i<this.currentRound.choices.length; i++) {
-                retval += '<div class="col-6"><div class="guess">' + this.currentRound.choices[i] + '</div></div>';
+                retval += '<div class="col-6 guess-container"><div class="guess">' + this.currentRound.choices[i] + '</div></div>';
             }
             $("#progress").html("Question " + this.usedQuestions.length + " of 10");
             return retval;
+        }
+    },
+
+    selectAnswer: function(index) {
+        if (!gameOver) {
+            console.log(index + " " + this.currentRound.answer);
+            if(index === this.currentRound.answer) {
+                $("#game-content").html(this.evaluate("correct"));
+                setTimeout(function() {
+                    $("#game-content").html(triviaGame.displayQuesiton());
+                    clock.countDown();
+                }, 3000);
+            } else {
+                $("#game-content").html(this.evaluate("incorrect"));
+                setTimeout(function() {
+                    $("#game-content").html(triviaGame.displayQuesiton());
+                    clock.countDown();
+                }, 3000);
+            }
         }
     },
 
@@ -211,28 +230,15 @@ $(document).ready(function() {
 
     $("#start").on("click", function() {
         $(this).addClass("d-none");
+        $(".main-body").addClass("game-running");
         $("#game-content").html(triviaGame.displayQuesiton());
         clock.countDown();
     });
 
-    $(document).on("click", "#game-content .guess", function() {
+    $(document).on("click", "#answers .guess-container", function() {
         var index = $(this).index();
         clock.reset();
-        if (!gameOver) {
-            if(index === triviaGame.currentRound.answer) {
-                $("#game-content").html(triviaGame.evaluate("correct"));
-                setTimeout(function() {
-                    $("#game-content").html(triviaGame.displayQuesiton());
-                    clock.countDown();
-                }, 3000);
-            } else {
-                $("#game-content").html(triviaGame.evaluate("incorrect"));
-                setTimeout(function() {
-                    $("#game-content").html(triviaGame.displayQuesiton());
-                    clock.countDown();
-                }, 3000);
-            }
-        }
+        triviaGame.selectAnswer(index);
     });
 
     $(document).on("click", "#game-content #reset", function() {
@@ -248,9 +254,14 @@ $(document).ready(function() {
         $("#game-content").toggleClass("blur", 200);
         if (clock.clockRunning === true) {
             clock.stop();
+            $(document).off("click", "#answers .guess-container");
             $(this).text("Resume");
         } else {
             clock.resume();
+            $(document).on("click", "#answers .guess-container", function() {
+                var index = $(this).index();
+                triviaGame.selectAnswer(index);
+            });
             $(this).text("Pause");
         }
     });
