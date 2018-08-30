@@ -6,6 +6,29 @@ function random(int) {
     return Math.floor(Math.random()*int);
 }
 
+function giphyRandom(searchTerm) {
+    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=RMDw4LWL789qavS8mg50wHl0MzLoDlRC&limit=1";
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        console.log(response);
+        var gif = response.data[0].images.original.url;
+        $(".right-answer").after('<img src="'+gif+'" class="answer-gif">');
+    });
+}
+
+function giphyDisplay(gifID) {
+    var queryURL = "http://api.giphy.com/v1/gifs/" + "3o7rbT3ECCXdEGE8fu" + "&api_key=RMDw4LWL789qavS8mg50wHl0MzLoDlRC";
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        var gif = response.data[0].images.original.url;
+        $(".right-answer").after('<img src="'+gif+'" class="answer-gif">');
+    });
+}
+
 // ====== OBJECTS ======
 var triviaGame = {
 
@@ -18,85 +41,99 @@ var triviaGame = {
             question: "How old is Stan Lee?",
             choices: ["89", "95", "92", "98"],
             answer: 1,
-            answerImage: "hamilton.jpeg"
+            gifID: "",
+            theme: "stan+lee",
         },
         {
             question: "What is Abominations Real Name?",
             choices: ["Brock Rumlow", "Thunderbolt Ross", "Georges Batroc", "Emil Blonsky"],
             answer: 3,
-            answerImage: "hamilton.jpeg"
+            gifID: "",
+            theme: "marvel+abomination+emil+blonsky"
         },
         {
             question: "The very first Marvel movie that Kevin Feige worked on was:",
             choices: ["Spider-Man", "X-Men", "Blade", "Daredevil"],
             answer: 1,
-            answerImage: "hamilton.jpeg"
+            gifID: "",
+            theme: "x+men+movie+2000"
         },
         {
             question: "On the Netflix show Daredevil, Kingpin is played by:?",
             choices: ["Vicent D'Onofrio", "Michael Clark Duncan", "John Goodman", "Wayne Knight"],
             answer: 0,
-            answerImage: "hamilton.jpeg"
+            gifID: "kUQHJmZWav90Q",
+            theme: "kingpin+netflix"
         },
         {
-            question: "?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "In Marvel's Ultimate Iron Man what color is Tony Stark's skin?",
+            choices: ["White", "Black", "Blue", "Green"],
+            answer: 2,
+            gifID: "",
+            theme: "iron+man"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "What is Taskmaster's Super Power?",
+            choices: ["Enhanced Organization", "Super Speed", "Fusion Blasts", "Photographic Reflexes"],
+            answer: 3,
+            gifID: "",
+            theme: "taskmaster+marvel"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "What are Wolverine's bones encased in?",
+            choices: ["Vibranium", "Unobtanium", "Carbonadium", "Adamantium"],
+            answer: 3,
+            gifID: "bmYyewjxo55oA",
+            theme: "adamantium"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
+            question: "Cain Marko is better known as:",
+            choices: ["Sabretooth", "Juggernaut", "Domino", "Omega Red"],
             answer: 1,
-            answerImage: "hamilton.jpeg"
+            gifID: "",
+            theme: "juggernaut+x-men"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "Skrulls have the ability to shapeshift.",
+            choices: ["True", "False"],
+            answer: 0,
+            gifID: "",
+            theme: "skrulls+marvel"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "On what planet did hulk become a gladiator?",
+            choices: ["Sakaar", "Asgard", "Klandathu", "Xandar"],
+            answer: 0,
+            gifID: "",
+            theme: "sakaar+planet+hulk"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "Who is Thor's brother?",
+            choices: ["Loki", "Heimdel", "Skurge", "Beta Ray Bill"],
+            answer: 0,
+            gifID: "",
+            theme: "loki+tom+hiddleson"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "Aunt May is related to:",
+            choices: ["Scott Summers", "Charles Xavier", "James Howlett", "Peter Parker"],
+            answer: 3,
+            gifID: "",
+            theme: "aunt+may+spiderman"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
+            question: "Foggy Nelson works with:",
+            choices: ["Steve Rogers", "Matt Murdoch", "Scott Summers", "Frank Castle"],
             answer: 1,
-            answerImage: "hamilton.jpeg"
+            gifID: "",
+            theme: "foggy+nelson+dardevil+netflix"
         },
         {
-            question: "What year was the Declaration of Inpendence signed?",
-            choices: ["2001", "1776", "1777", "1781"],
-            answer: 1,
-            answerImage: "hamilton.jpeg"
+            question: "What team of teenage superheroes sparked the first Civil War?",
+            choices: ["New Warriors", "The Runaways", "Blaster's League", "Young Avengers"],
+            answer: 0,
+            gifID: "",
+            theme: "marvel+civil+war+new+warriors"
         },
 
     ],
@@ -159,6 +196,11 @@ var triviaGame = {
             retval += '<h3 class="result">You have to be quicker!</h3>';
         }
         retval += '<h5 class="right-answer">The correct answer was ' + this.currentRound.choices[this.currentRound.answer] + '</h5>';
+        if (this.currentRound.gifID === "") {
+            giphyRandom(this.currentRound.theme);
+        } else {
+            giphyDisplay(this.currentRound.gifID);
+        }
         return retval;
     },
 
@@ -171,7 +213,7 @@ var triviaGame = {
         retval += '<h4>Correct Answers: ' + this.rightAnswers + '</h4>';
         retval += '<h4>Incorrect Answers: ' + this.wrongAnswers + '</h4>';
         retval += '<h4>Unanswered: ' + this.unanswered + '</h4>';
-        retval += '<button class="btn" id="reset">Start Over?</button>';
+        retval += '<button class="btn btn-lg" id="reset">Start Over?</button>';
         return retval;
     },
 
@@ -224,7 +266,6 @@ var clock = {
 
 $("#timer").html(clock.timePerQuestion);
 
-
 // ====== EVENT LISTENERS ======
 $(document).ready(function() {
 
@@ -249,7 +290,6 @@ $(document).ready(function() {
         clock.countDown();
         $("#game-content").html(triviaGame.displayQuesiton());
         $("#timer").html(clock.timePerQuestion);
-        console.log(clock);
     });
 
     $("#pause").on("click", function() {
