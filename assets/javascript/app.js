@@ -104,9 +104,9 @@ var triviaGame = {
 
     // Creates output of the question and choices
     displayQuesiton: function() {
-        $("#pause").toggleClass("d-none");
-        $("#progress").toggleClass("d-none");
-        var retval = '<h3 class="text-center">';
+        $("#pause").toggleClass("vis-hidden");
+        $("#progress").toggleClass("vis-hidden");
+        var retval = '<h3 class="text-center mb-4">';
         if (this.usedQuestions.length === 10) {
             return this.endGameDisplay();
         } else {
@@ -115,7 +115,7 @@ var triviaGame = {
             retval += this.currentRound.question;
             retval += '</h3><div class="row" id="answers">'
             for (var i=0; i<this.currentRound.choices.length; i++) {
-                retval += '<div class="col-6 guess-container"><div class="guess">' + this.currentRound.choices[i] + '</div></div>';
+                retval += '<div class="col-sm-6 guess-container"><div class="guess">' + this.currentRound.choices[i] + '</div></div>';
             }
             $("#progress").html("Question " + this.usedQuestions.length + " of 10");
             return retval;
@@ -144,27 +144,27 @@ var triviaGame = {
     // Game Evaluation functions
     evaluate: function(outcome) {
         var retval = "";
-        $("#pause").toggleClass("d-none");
-        $("#progress").toggleClass("d-none");
+        $("#pause").toggleClass("vis-hidden");
+        $("#progress").toggleClass("vis-hidden");
         if (outcome === "correct") {
             this.rightAnswers++;
-            retval += "<h3>Right On!</h3>";
+            retval += '<h3 class="result">Right On!</h3>';
         }
         if (outcome === "incorrect") {
             this.wrongAnswers++;
-            retval += "<h3>Nope!</h3>";
+            retval += '<h3 class="result">Nope!</h3>';
         }
         if (outcome === "unanswered") {
             this.unanswered++;
-            retval += "<h3>You have to be quicker!</h3>";
+            retval += '<h3 class="result">You have to be quicker!</h3>';
         }
-        retval += "<p>The correct answer was " + this.currentRound.choices[this.currentRound.answer] + "</p>";
+        retval += '<h5 class="right-answer">The correct answer was ' + this.currentRound.choices[this.currentRound.answer] + '</h5>';
         return retval;
     },
 
     endGameDisplay: function() {
-        $("#pause").toggleClass("d-none");
-        $("#progress").toggleClass("d-none");
+        $("#pause").toggleClass("vis-hidden");
+        $("#progress").toggleClass("vis-hidden");
         gameOver = true;
         clock.stop();
         var retval = "<h3>All done, here's how you did!</h3>";
@@ -230,7 +230,9 @@ $(document).ready(function() {
 
     $("#start").on("click", function() {
         $(this).addClass("d-none");
+        $("#pause").removeClass("d-none");
         $(".main-body").addClass("game-running");
+        $("#game-content").css('min-height', '235px');
         $("#game-content").html(triviaGame.displayQuesiton());
         clock.countDown();
     });
