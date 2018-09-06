@@ -12,21 +12,15 @@ function giphyRandom(searchTerm) {
         url: queryURL,
         method: "GET"
     }).then(function(response){
-        console.log(response);
         var gif = response.data[0].images.original.url;
         $(".right-answer").after('<img src="'+gif+'" class="answer-gif">');
     });
 }
 
-function giphyDisplay(gifID) {
-    var queryURL = "http://api.giphy.com/v1/gifs/" + "3o7rbT3ECCXdEGE8fu" + "&api_key=RMDw4LWL789qavS8mg50wHl0MzLoDlRC";
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    }).then(function(response){
-        var gif = response.data[0].images.original.url;
-        $(".right-answer").after('<img src="'+gif+'" class="answer-gif">');
-    });
+function mediaDisplay(answerMedia) {
+    console.log(answerMedia);
+    $(".right-answer").html('<h1>test</h1>');
+    console.log("test");
 }
 
 // ====== OBJECTS ======
@@ -38,103 +32,117 @@ var triviaGame = {
     currentRound: undefined,
     gameRounds: [
         {
+            question: "Victor Von Doom is the leader of what country?",
+            choices: ["Latveria", "Wakanda", "Genosha", "Sokovia"],
+            answer: 0,
+            answerMedia: "https://media.giphy.com/media/eEXgd5iG7Ie40/giphy.gif",
+            themes: "doctor+doom"
+        },
+        {
             question: "How old is Stan Lee?",
             choices: ["89", "95", "92", "98"],
             answer: 1,
-            gifID: "",
+            answerMedia: "https://media.giphy.com/media/GfNXXcnattxkY/giphy.gif",
             theme: "stan+lee",
         },
         {
             question: "What is Abominations Real Name?",
             choices: ["Brock Rumlow", "Thunderbolt Ross", "Georges Batroc", "Emil Blonsky"],
             answer: 3,
-            gifID: "",
-            theme: "marvel+abomination+emil+blonsky"
+            answerMedia: "https://media.giphy.com/media/PhpEzScIpMv3W/giphy.gif",
+            theme: ""
         },
         {
             question: "The very first Marvel movie that Kevin Feige worked on was:",
             choices: ["Spider-Man", "X-Men", "Blade", "Daredevil"],
             answer: 1,
-            gifID: "",
-            theme: "x+men+movie+2000"
+            answerMedia: "https://media.giphy.com/media/b4bVp5rGZxfck/giphy.gif",
+            theme: ""
         },
         {
             question: "On the Netflix show Daredevil, Kingpin is played by:?",
             choices: ["Vicent D'Onofrio", "Michael Clark Duncan", "John Goodman", "Wayne Knight"],
             answer: 0,
-            gifID: "kUQHJmZWav90Q",
-            theme: "kingpin+netflix"
+            answerMedia: "https://media.giphy.com/media/hbKTZg7jpSWR2/giphy.gif",
+            theme: ""
         },
         {
             question: "In Marvel's Ultimate Iron Man what color is Tony Stark's skin?",
             choices: ["White", "Black", "Blue", "Green"],
             answer: 2,
-            gifID: "",
-            theme: "iron+man"
+            answerMedia: "http://0.media.dorkly.cvcdn.com/73/97/845463f5d1cdf7251cc9c3f91aba00b9.jpg",
+            theme: ""
         },
         {
             question: "What is Taskmaster's Super Power?",
             choices: ["Enhanced Organization", "Super Speed", "Fusion Blasts", "Photographic Reflexes"],
             answer: 3,
-            gifID: "",
-            theme: "taskmaster+marvel"
+            answerMedia: "https://vignette.wikia.nocookie.net/marvelanimated/images/3/34/Taskmaster_USM.png/revision/latest?cb=20121219211601",
+            theme: ""
         },
         {
             question: "What are Wolverine's bones encased in?",
             choices: ["Vibranium", "Unobtanium", "Carbonadium", "Adamantium"],
             answer: 3,
-            gifID: "bmYyewjxo55oA",
+            answerMedia: "https://media.giphy.com/media/d5LvUHy1Y1CV2/source.gif",
             theme: "adamantium"
         },
         {
             question: "Cain Marko is better known as:",
             choices: ["Sabretooth", "Juggernaut", "Domino", "Omega Red"],
             answer: 1,
-            gifID: "",
+            answerMedia: "",
             theme: "juggernaut+x-men"
         },
         {
             question: "Skrulls have the ability to shapeshift.",
             choices: ["True", "False"],
             answer: 0,
-            gifID: "",
+            answerMedia: "https://static3.srcdn.com/wordpress/wp-content/uploads/2018/09/Captain-Marvel-Skrulls-EW.jpg?q=50&fit=crop&w=738&dpr=1.5",
             theme: "skrulls+marvel"
         },
         {
             question: "On what planet did hulk become a gladiator?",
             choices: ["Sakaar", "Asgard", "Klandathu", "Xandar"],
             answer: 0,
-            gifID: "",
+            answerMedia: "https://static3.srcdn.com/wordpress/wp-content/uploads/2017/04/Planet-Hulk.jpg",
             theme: "sakaar+planet+hulk"
         },
         {
             question: "Who is Thor's brother?",
             choices: ["Loki", "Heimdel", "Skurge", "Beta Ray Bill"],
             answer: 0,
-            gifID: "",
+            answerMedia: "https://media.giphy.com/media/K2vjxBJ1jTPWg/giphy.gif",
             theme: "loki+tom+hiddleson"
         },
         {
             question: "Aunt May is related to:",
             choices: ["Scott Summers", "Charles Xavier", "James Howlett", "Peter Parker"],
             answer: 3,
-            gifID: "",
+            answerMedia: "",
             theme: "aunt+may+spiderman"
         },
         {
             question: "Foggy Nelson works with:",
             choices: ["Steve Rogers", "Matt Murdoch", "Scott Summers", "Frank Castle"],
             answer: 1,
-            gifID: "",
-            theme: "foggy+nelson+dardevil+netflix"
+            answerMedia: "../images/foggy-nelson.gif",
+            theme: "dardevil+netflix"
         },
         {
             question: "What team of teenage superheroes sparked the first Civil War?",
             choices: ["New Warriors", "The Runaways", "Blaster's League", "Young Avengers"],
             answer: 0,
-            gifID: "",
+            answerMedia: "http://www.i-mockery.com/comics/longbox11/pics/new-warriors.jpg",
             theme: "marvel+civil+war+new+warriors"
         },
+        {
+            question: "In the comics, who gets sent back in time in X-Men: Days of Future Past?",
+            choices: ["Wolverine", "Bishop", "Professor X", "Shadowcat"],
+            answer: 3,
+            answerMedia: "https://data.whicdn.com/images/242375275/original.gif",
+            theme: "kitty+pryde"
+        }
 
     ],
     usedQuestions: [],
@@ -161,7 +169,6 @@ var triviaGame = {
 
     selectAnswer: function(index) {
         if (!gameOver) {
-            console.log(index + " " + this.currentRound.answer);
             if(index === this.currentRound.answer) {
                 $("#game-content").html(this.evaluate("correct"));
                 setTimeout(function() {
@@ -196,10 +203,10 @@ var triviaGame = {
             retval += '<h3 class="result">You have to be quicker!</h3>';
         }
         retval += '<h5 class="right-answer">The correct answer was ' + this.currentRound.choices[this.currentRound.answer] + '</h5>';
-        if (this.currentRound.gifID === "") {
+        if (this.currentRound.answerMedia === "") {
             giphyRandom(this.currentRound.theme);
         } else {
-            giphyDisplay(this.currentRound.gifID);
+            retval += '<img src="'+this.currentRound.answerMedia+'" class="answer-gif">';
         }
         return retval;
     },
