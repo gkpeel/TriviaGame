@@ -1,2 +1,2 @@
 # TriviaGame
-A trivia game that shows a series of timed cooking related questions.
+A trivia game that shows a series of timed Marvel related questions.
